@@ -5,12 +5,14 @@ package App::Prove::Plugin::SetEnv;
 use strict;
 use warnings;
 
+use String::Expand qw( expand_string );
+
 sub load {
-    my ($class, $p) = @_;
-    foreach my $arg (@{$p->{args}}) {
-        my ($var, $val) = split '=', $arg, 2;
-        $ENV{$var} = $val;
-    }
+  my ( $class, $p ) = @_;
+  foreach my $arg ( @{ $p->{ args } } ) {
+    my ( $var, $val ) = split '=', $arg, 2;
+    $ENV{ $var } = expand_string( $val, \%ENV );
+  }
 }
 
 =head1 SYNOPSIS
@@ -25,7 +27,7 @@ scripts.  It is particularly handy in C<.proverc>.
 
 =head1 BUGS
 
-Due to the way L<App::Prove> splits argumets to plugins, it is not
+Due to the way L<App::Prove> splits arguments to plugins, it is not
 possible to set values containing commas.
 
 =head1 SEE ALSO
